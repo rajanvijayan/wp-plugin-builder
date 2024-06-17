@@ -1,0 +1,48 @@
+# Ignore PHPStorm project files
+.idea/
+
+# Ignore Composer vendor directory
+/vendor/
+
+# Ignore node_modules directory
+/node_modules/
+
+# Ignore operating system files
+.DS_Store
+Thumbs.db
+
+# Ignore log files and databases
+*.log
+*.sql
+*.sqlite
+
+# Ignore package lock files
+package-lock.json
+yarn.lock
+
+# Ignore WordPress specific files
+wp-config.php
+wp-content/debug.log
+
+# Ignore build artifacts
+/build/
+dist/
+
+# Ignore Composer lock file (optional, if you want to manage dependencies manually)
+composer.lock
+
+# Ignore local environment files
+.env
+.env.local
+
+# Ignore temporary files
+*.tmp
+*.swp
+*.bak
+
+# Ignore backups
+*.bak
+*.backup
+
+# Ignore compiled PHP files
+*.php~

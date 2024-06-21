@@ -46,3 +46,8 @@ composer.lock
 
 # Ignore compiled PHP files
 *.php~
+
+# Test Plugin
+/test-Plugin/
+/my-plugin/
+/my-plugiin-name/

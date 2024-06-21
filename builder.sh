@@ -26,8 +26,8 @@ create_plugin() {
     # Prompt for Author URL
     read -p "Author URL: " author_url
 
-    # Create plugin directory
-    mkdir -p "$plugin_slug/$vendor_name"
+    # Create plugin directory structure
+    mkdir -p "$plugin_slug/src" "$plugin_slug/vendor" "$plugin_slug/languages" "$plugin_slug/assets/css" "$plugin_slug/assets/js" "$plugin_slug/assets/images" "$plugin_slug/templates" "$plugin_slug/tests"
 
     # Create main plugin file
     cat <<EOL > "$plugin_slug/$plugin_slug.php"
@@ -42,23 +42,39 @@ create_plugin() {
  * Domain Path: /languages
  */
 
-// PSR-4 autoloader
-spl_autoload_register(function (\$class) {
-    \$prefix = '$vendor_name\\';
-    \$base_dir = __DIR__ . '/$vendor_name/';
-    \$len = strlen(\$prefix);
-    if (strncmp(\$prefix, \$class, \$len) !== 0) {
-        return;
-    }
-    \$relative_class = substr(\$class, \$len);
-    \$file = \$base_dir . str_replace('\\\\', '/', \$relative_class) . '.php';
-    if (file_exists(\$file)) {
-        require \$file;
-    }
-});
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly.
+}
+
+// PSR-4 autoloading
+require __DIR__ . '/vendor/autoload.php';
+
+use $vendor_name\\Core\\Main;
+
+// Initialize the plugin
+Main::init();
 EOL
 
-    # Create composer.json if package.json is required
+    # Create Core Main class file
+    mkdir -p "$plugin_slug/src/Core"
+    cat <<EOL > "$plugin_slug/src/Core/Main.php"
+<?php
+
+namespace $vendor_name\\Core;
+
+class Main {
+    public static function init() {
+        // Add your initialization code here
+        add_action('init', [__CLASS__, 'setup']);
+    }
+
+    public static function setup() {
+        // Add your setup code here
+    }
+}
+EOL
+
+    # Create composer.json if required
     if [ "$require_package_json" == "yes" ]; then
         cat <<EOL > "$plugin_slug/composer.json"
 {
@@ -73,7 +89,7 @@ EOL
     ],
     "autoload": {
         "psr-4": {
-            "$vendor_name\\\\": "$vendor_name/"
+            "$vendor_name\\\\": "src/"
         }
     },
     "require": {}
@@ -88,7 +104,16 @@ EOL
 create_module() {
     local plugin_name=$1
     local module_name=$2
-    local module_path=$plugin_name/$module_name
+    local module_path="$plugin_name/src/$module_name"
+
+    # Replace slashes with backslashes for namespace
+    local namespace=$(echo "$module_name" | sed 's/\//\\/g')
+
+    # Check if module already exists
+    if [ -d "$module_path" ]; then
+        echo "Module '$module_name' already exists inside plugin '$plugin_name'."
+        exit 1
+    fi
 
     # Create module directory
     mkdir -p "$module_path"
@@ -98,7 +123,7 @@ create_module() {
     cat <<EOL > "$module_path/$module_class_name.php"
 <?php
 
-namespace $module_name;
+namespace $plugin_name\\$namespace;
 
 class $module_class_name {
     public function __construct() {

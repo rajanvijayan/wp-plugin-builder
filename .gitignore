@@ -48,6 +48,6 @@ composer.lock
 *.php~
 
 # Test Plugin
-/test-Plugin/
+/test-plugin/
 /my-plugin/
 /my-plugiin-name/

@@ -1,16 +1,26 @@
 {
   "name": "wp-plugin-builder",
   "version": "1.0.2",
-  "description": "",
+  "description": "A CLI tool to create WordPress plugins and modules using the PSR-4 model",
   "main": "index.js",
   "bin": {
-    "builder": "./index.js"
+    "builder": "./bin/builder.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/wp-plugin-builder.git"
+  },
+  "keywords": [
+    "wordpress",
+    "plugin",
+    "cli",
+    "psr-4"
+  ],
+  "author": "Rajan Vijayan <me@rajanvijayan.com>",
+  "license": "MIT",
   "dependencies": {
     "fs-extra": "^10.0.0",
     "inquirer": "^8.2.0"

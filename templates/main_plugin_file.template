@@ -1,0 +1,22 @@
+<?php
+/**
+ * Plugin Name: {{PLUGIN_NAME}}
+ * Description: {{PROJECT_DESCRIPTION}}
+ * Plugin URI: {{PLUGIN_URL}}
+ * Author: {{AUTHOR_NAME}}
+ * Author URI: {{AUTHOR_URL}}
+ * Text Domain: {{PLUGIN_SLUG}}
+ * Domain Path: /languages
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly.
+}
+
+// PSR-4 autoloading
+require __DIR__ . '/vendor/autoload.php';
+
+use {{VENDOR_NAME}}\Core\Main;
+
+// Initialize the plugin
+Main::init();

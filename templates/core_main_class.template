@@ -1,0 +1,14 @@
+<?php
+
+namespace {{VENDOR_NAME}}\Core;
+
+class Main {
+    public static function init() {
+        // Add your initialization code here
+        add_action('init', [__CLASS__, 'setup']);
+    }
+
+    public static function setup() {
+        // Add your setup code here
+    }
+}

@@ -29,72 +29,34 @@ create_plugin() {
     # Create plugin directory structure
     mkdir -p "$plugin_slug/src" "$plugin_slug/vendor" "$plugin_slug/languages" "$plugin_slug/assets/css" "$plugin_slug/assets/js" "$plugin_slug/assets/images" "$plugin_slug/templates" "$plugin_slug/tests"
 
-    # Create main plugin file
-    cat <<EOL > "$plugin_slug/$plugin_slug.php"
-<?php
-/**
- * Plugin Name: $plugin_name
- * Description: $project_description
- * Plugin URI: $plugin_url
- * Author: $author_name
- * Author URI: $author_url
- * Text Domain: $plugin_slug
- * Domain Path: /languages
- */
+    # Read template for main plugin file
+    main_plugin_file=$(<templates/main_plugin_file.template)
+    main_plugin_file=${main_plugin_file//\{\{PLUGIN_NAME\}\}/$plugin_name}
+    main_plugin_file=${main_plugin_file//\{\{PROJECT_DESCRIPTION\}\}/$project_description}
+    main_plugin_file=${main_plugin_file//\{\{PLUGIN_URL\}\}/$plugin_url}
+    main_plugin_file=${main_plugin_file//\{\{AUTHOR_NAME\}\}/$author_name}
+    main_plugin_file=${main_plugin_file//\{\{AUTHOR_URL\}\}/$author_url}
+    main_plugin_file=${main_plugin_file//\{\{PLUGIN_SLUG\}\}/$plugin_slug}
+    main_plugin_file=${main_plugin_file//\{\{VENDOR_NAME\}\}/$vendor_name}
+    
+    echo "$main_plugin_file" > "$plugin_slug/$plugin_slug.php"
 
-if ( ! defined( 'ABSPATH' ) ) {
-    exit; // Exit if accessed directly.
-}
-
-// PSR-4 autoloading
-require __DIR__ . '/vendor/autoload.php';
-
-use $vendor_name\\Core\\Main;
-
-// Initialize the plugin
-Main::init();
-EOL
-
-    # Create Core Main class file
-    mkdir -p "$plugin_slug/src/Core"
-    cat <<EOL > "$plugin_slug/src/Core/Main.php"
-<?php
-
-namespace $vendor_name\\Core;
-
-class Main {
-    public static function init() {
-        // Add your initialization code here
-        add_action('init', [__CLASS__, 'setup']);
-    }
-
-    public static function setup() {
-        // Add your setup code here
-    }
-}
-EOL
+    # Read template for Core Main class file
+    core_main_class=$(<templates/core_main_class.template)
+    core_main_class=${core_main_class//\{\{VENDOR_NAME\}\}/$vendor_name}
+    
+    echo "$core_main_class" > "$plugin_slug/src/Core/Main.php"
 
     # Create composer.json if required
     if [ "$require_package_json" == "yes" ]; then
-        cat <<EOL > "$plugin_slug/composer.json"
-{
-    "name": "$plugin_slug",
-    "description": "$project_description",
-    "type": "wordpress-plugin",
-    "authors": [
-        {
-            "name": "$author_name",
-            "homepage": "$author_url"
-        }
-    ],
-    "autoload": {
-        "psr-4": {
-            "$vendor_name\\\\": "src/"
-        }
-    },
-    "require": {}
-}
-EOL
+        composer_json=$(<templates/composer_json.template)
+        composer_json=${composer_json//\{\{PLUGIN_SLUG\}\}/$plugin_slug}
+        composer_json=${composer_json//\{\{PROJECT_DESCRIPTION\}\}/$project_description}
+        composer_json=${composer_json//\{\{AUTHOR_NAME\}\}/$author_name}
+        composer_json=${composer_json//\{\{AUTHOR_URL\}\}/$author_url}
+        composer_json=${composer_json//\{\{VENDOR_NAME\}\}/$vendor_name}
+        
+        echo "$composer_json" > "$plugin_slug/composer.json"
     fi
 
     echo "WordPress plugin '$plugin_name' created successfully."

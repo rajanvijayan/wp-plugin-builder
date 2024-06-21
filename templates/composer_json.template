@@ -1,0 +1,17 @@
+{
+    "name": "{{PLUGIN_SLUG}}",
+    "description": "{{PROJECT_DESCRIPTION}}",
+    "type": "wordpress-plugin",
+    "authors": [
+        {
+            "name": "{{AUTHOR_NAME}}",
+            "homepage": "{{AUTHOR_URL}}"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "{{VENDOR_NAME}}\\\\": "src/"
+        }
+    },
+    "require": {}
+}
